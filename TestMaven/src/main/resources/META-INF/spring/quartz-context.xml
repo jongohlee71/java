@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="jobLoaderDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 서비스 구현 객체의 빈 이름을 인자로 줍니다. -->
+        <property name="targetObject" ref="jobLoader" />
+        <!-- 서비스 객체에서 실행될 메소드 지정 -->
+        <property name="targetMethod" value="execute" />
+        <!-- 동시 실행을 방지 -->
+        <property name="concurrent" value="false" />
+    </bean>
+    
+    <bean id="jobLoaderTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="jobLoaderDetail" />
+        <property name="repeatInterval" value="60000" /><!-- 60 second -->
+        <property name="startDelay" value="10000" /><!-- 10 second -->
+        <!-- CronTrigger를 사용 : 초 분 시 일 월 요일 (년)
+        <property name="cronExpression" value="0 0/1 * * * ?" />
+        -->
+    </bean>
+    
+    <!-- 테스트용 스케줄러 -->
+    <bean id="jobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <!-- 앞에서 설정한 트리거를 등록합니다. 필요하면 여러개 만들어서 등록하면 됩니다. -->
+            <list><ref bean="jobLoaderTrigger" /></list>
+        </property>
+    </bean>
+
+</beans>

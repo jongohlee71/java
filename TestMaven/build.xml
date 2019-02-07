@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ant" basedir="." default="build">
+
+    <!-- ############################################################################## -->
+    <!--                                 property                                           -->
+    <!-- ############################################################################## -->
+    <property file="build.properties" />    
+    <property name="project_name" value="sas_bo" />
+    <!--
+    <property name="catalina.home" value="C:/sas/apache-tomcat-8.5.29" />
+    <property name="tomcat-manager-url" value="http://168.154.244.53:8080/manager/html" />
+    <property name="tomcat-manager-username" value="admin" />
+    <property name="tomcat-manager-password" value="tomcat" />
+
+    <property name="catalina.ant.jar" value="${catalina.home}/lib/catalina-ant.jar" />
+    <taskdef file="catalina.tasks" classpath="${catalina.ant.jar}" />
+
+    -->
+
+    
+    
+    <property name="java.target" value="1.8" />
+    <property name="project_src" value="src/main/java" />
+    <property name="project_resources" value="src/main/resources" />
+    <property name="project_webapp" value="src/main/webapp" />
+    <property name="target_project" value="target/${project_name}" />
+    <property name="target_classes" value="${target_project}/WEB-INF/classes" />
+
+
+    <!--
+    <taskdef name="start" classname="org.apache.catalina.ant.StartTask" classpath="${catalina.ant.jar}" />
+    <taskdef name="stop" classname="org.apache.catalina.ant.StopTask" classpath="${catalina.ant.jar}" />
+    <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpath="${catalina.ant.jar}" />
+    <taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpath="${catalina.ant.jar}" />
+    -->
+    
+
+    <!-- ############################################################################## -->
+    <!--                                 CLASS PATH                                           -->
+    <!-- ############################################################################## -->
+
+    <path id="common_classpath">
+        <fileset dir="${catalina.home}/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- ############################################################################## -->
+    <!--                                BUILD START                                           -->
+    <!-- ############################################################################## -->
+    <target name="build">
+        <echo message="|-------------------------------------------------------------| " />
+        <echo message="| BUILD LOCAL START                                           | " />
+        <echo message="|-------------------------------------------------------------| " />
+        <antcall target="clean" />
+        <antcall target="war" />
+    </target>
+
+    <target name="build_dev">
+        <echo message="|-------------------------------------------------------------| " />
+        <echo message="| BUILD DEV START                                             | " />
+        <echo message="|-------------------------------------------------------------| " />
+        <antcall target="clean" />
+        <antcall target="war" />
+    </target>
+
+    <target name="build_prod">
+        <echo message="|-------------------------------------------------------------| " />
+        <echo message="| BUILD PROD START                                            | " />
+        <echo message="|-------------------------------------------------------------| " />
+        <antcall target="clean" />
+        <antcall target="war" />
+    </target>
+    
+    <!-- src, classes 삭제 -->
+    <target name="clean">
+        <echo message="|-------------------------------------------------------------| " />
+        <echo message="clean target : ${target_project}" />
+        <echo message="|-------------------------------------------------------------| " />
+
+        <delete dir="target"  />
+    </target>
+
+    <!-- ############################################################################## -->
+    <!--                                     BUILD                                           -->
+    <!-- ############################################################################## -->
+    <!-- 디렉토리 생성 -->
+    <target name="make_dir">
+        <mkdir dir="${target_classes}" />
+    </target>
+
+    <!-- java compile -->
+    <target name="compile_java" depends="make_dir">
+        <echo message="|-------------------------------------------------------------| " />
+        <echo message="| JAVA COMPILE START                                          | " />
+        <echo message="|-------------------------------------------------------------| " />
+        <javac target="${java.target}"
+            nowarn="true" deprecation="false" debug="true"
+            listfiles="false" failonerror="true" optimize="false" includeantruntime="false"
+            srcdir="${project_src}" destdir="${target_classes}" encoding="UTF-8">
+
+            <include name="**/*.java" />
+
+            <classpath>
+                <path refid="common_classpath" />
+                <fileset dir="${project_webapp}/WEB-INF/lib">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- source build -->
+    <target name="combine_webapp" depends="compile_java">
+        <echo message="|-------------------------------------------------------------| " />
+        <echo message="| COMBINE WEBAPP START                                        | " />
+        <echo message="|-------------------------------------------------------------| " />
+        <copy todir="${target_project}" overwrite="true">
+            <fileset dir="${project_webapp}">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${target_classes}" overwrite="true">
+            <fileset dir="${project_resources}">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="war" depends="combine_webapp">
+        <echo message="|-------------------------------------------------------------| " />
+        <echo message="| MAKE WAR START                                                | " />
+        <echo message="|-------------------------------------------------------------| " />
+        <war destfile="target/${project_name}.war" webxml="${project_webapp}/WEB-INF/web.xml">
+            <fileset dir="${target_project}" >
+                <include name="**/*.*"/>
+            </fileset>
+        </war>
+    </target>
+
+    <target name="start" description="start application in tomcat">
+        <start url="${tomcat-manager-url}" username="${tomcat-manager-username}"
+            password="${tomcat-manager-password}" path="/${project_name}" />
+    </target>
+    
+    <target name="undeploy" description="undeploy from tomcat">
+        <undeploy 
+            failonerror="no"
+            url="${tomcat-manager-url}"
+            username="${tomcat-manager-username}"
+            password="${tomcat-manager-password}"
+            path="/sas_bo"
+        />
+    </target>
+    
+    <target name="deploy" description="deploy to tomcat">
+        <echo>deploying from client</echo>
+        <deploy 
+            url="${tomcat-manager-url}"
+            username="${tomcat-manager-username}"
+            password="${tomcat-manager-password}"
+            path="/${project_name}"
+            war="file:target/${project_name}.war"
+        />
+    </target>    
+</project>

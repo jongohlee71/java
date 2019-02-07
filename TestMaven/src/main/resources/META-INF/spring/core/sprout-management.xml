@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id="licenseCheck" class="nexcore.sprout.foundry.license.LicenseChecker"/>
+    
+    <!-- ========================= [START] Sprout Event DEFINITIONS ======================== -->
+    <bean id="sproutEventPublisher"  class="lk.app.common.security.SasEventPublisher">
+        <property name="menuIdKey" value="menuId"/>
+    </bean>
+    
+     <bean id="applicationEventMulticaster" class="nexcore.sprout.foundry.event.multicaster.AsyncEventListenerSupportMulticaster">
+         <property name="taskExecutor" ref="multicastExecutor"/>
+     </bean>
+    <task:executor id="multicastExecutor" pool-size="100" keep-alive="60" queue-capacity="100"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <mvc:exclude-mapping path="/resources/**" /> 
+            <ref bean="sproutEventPublisher"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!-- ========================= [END] Sprout Event DEFINITIONS ======================== -->
+     
+    <!-- ========================= [START] Access Log DEFINITIONS ======================== -->
+    <bean id="accessLogManager" class="nexcore.sprout.foundry.log.accesslog.AccessLogManager">
+        <property name="accessLogWriters">
+            <list>
+                <ref bean="accessLogDbWriter" />
+                <ref bean="errorLogDbWriter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="accessLogDataExtractorForOldBcm" class="nexcore.sprout.foundry.log.accesslog.old.AccessLogDataExtractorForOldBcm"/>
+    <bean id="accessLogDbWriter" class="nexcore.sprout.foundry.log.accesslog.old.AccessLogDbWriterForOldBcm">
+        <property name="dataSource" ref="dataSourceForSprout"/>
+        <property name="transactionManager" ref="transactionManagerForSprout"/>
+        <property name="accessLogDataExtractor" ref="accessLogDataExtractorForOldBcm"/>
+        <property name="insertQuery" value="${${dbms.kind}.access-log.insert-query}" />
+    </bean>
+    <bean id="errorLogDbWriter" class="nexcore.sprout.foundry.log.errorlog.ErrorLogDbWriter">
+        <property name="dataSource" ref="dataSourceForSprout" />
+        <property name="transactionManager" ref="transactionManagerForSprout" />
+        <property name="accessLogDataExtractor" ref="accessLogDataExtractorForOldBcm" />
+        <property name="insertQuery" value="${${dbms.kind}.error-log.insert-query}" />
+    </bean>
+    <!-- ========================= [END] Access Log DEFINITIONS ======================== -->
+</beans>

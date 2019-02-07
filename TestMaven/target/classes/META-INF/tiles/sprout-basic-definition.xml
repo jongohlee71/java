@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- SAS .do -->
+	<!-- prefix m/*/*/* -->
+	<definition name="lk-intro" template="/WEB-INF/layouts/tiles/lk-intro.jsp" preparer="menuPreparer2">
+		<put-attribute name="header" value="/WEB-INF/layouts/lk_top.jsp" />
+        <put-attribute name="common" value="/WEB-INF/views/common/lk_common.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/layouts/lk_footer.jsp" />
+	</definition>
+
+	<!-- prefix s/*/*/* -->
+	<definition name="lk-main" template="/WEB-INF/layouts/tiles/lk-basic.jsp" preparer="menuPreparer2">
+		<put-attribute name="header" value="/WEB-INF/layouts/lk_top.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/layouts/lk_left.jsp" />
+        <put-attribute name="common" value="/WEB-INF/views/common/lk_common.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/layouts/lk_footer.jsp" />
+	</definition>
+
+	<!-- prefix p/*/*/* -->
+	<definition name="lk-popup" template="/WEB-INF/layouts/tiles/lk-basic-popup.jsp" preparer="menuPreparer2">
+        <put-attribute name="common" value="/WEB-INF/views/common/lk_common.jsp" />
+		<put-attribute name="body" value="" />
+	</definition>
+
+	<!-- prefix n/*/*/* -->
+	<definition name="lk-none" template="/WEB-INF/layouts/tiles/lk-basic-none.jsp">
+		<put-attribute name="body" value="" />
+	</definition>
+		
+	<!-- .do -->
+	<definition name="/WEB-INF/views/m/*/*.do" extends="lk-intro" >
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+		<put-attribute name="pageName" value="{2}" />
+	</definition>
+
+	<definition name="/WEB-INF/views/n/*/*.do" extends="lk-none" >
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+		<put-attribute name="pageName" value="{2}" />
+	</definition>
+
+	<definition name="/WEB-INF/views/n/*/*/*.do" extends="lk-none" >
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+		<put-attribute name="pageName" value="{3}" />
+	</definition>
+	
+	<definition name="/WEB-INF/views/s/*/*/*.do" extends="lk-main" >
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+		<put-attribute name="pageJS" value="/script/{1}/{2}/{3}.js" />
+		<put-attribute name="pageName" value="{3}" />
+	</definition>
+
+	<definition name="/WEB-INF/views/s/*/*.do" extends="lk-main" >
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+		<put-attribute name="pageJS" value="/script/{1}/{2}.js" />
+		<put-attribute name="pageName" value="{2}" />
+	</definition>
+
+	<definition name="/WEB-INF/views/s/*.do" extends="lk-main" >
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+		<put-attribute name="pageJS" value="/script/{1}.js" />
+		<put-attribute name="pageName" value="{1}" />
+	</definition>
+
+	<definition name="/WEB-INF/views/p/*/*/*.do" extends="lk-popup">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+	</definition>
+
+	<definition name="/WEB-INF/views/p/*/*.do" extends="lk-popup">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+
+	<definition name="/WEB-INF/views/p/*.do" extends="lk-popup">
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+
+	<definition name="/WEB-INF/views/common/error/error.do" extends="lk-popup">
+		<put-attribute name="body" value="/WEB-INF/views/common/error/error.jsp" />
+	</definition>
+
+</tiles-definitions>

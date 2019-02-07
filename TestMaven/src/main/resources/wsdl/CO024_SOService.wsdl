@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CO024_SO"
+    targetNamespace="http://lk.co.kr/CO024"
+    xmlns:p1="http://lk.co.kr/CO024"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:documentation />
+    <wsp:UsingPolicy wsdl:required="true" />
+    <wsp:Policy wsu:Id="OP_CO024_SO" />
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://lk.co.kr/CO024"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://lk.co.kr/CO024">
+            <xsd:element name="MT_CO024_S" type="DT_CO024_S" />
+            <xsd:element name="MT_CO024_SR" type="DT_CO024_SR" />
+            <xsd:complexType name="DT_CO024_SR">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">0e136d1fc31d1
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="CONFM_BUDGET" type="xsd:string"
+                        minOccurs="0" />
+                    <xsd:element name="EXPNDTR_ACMTL" type="xsd:string"
+                        minOccurs="0" />
+                    <xsd:element name="BUDGET_BLCE" type="xsd:string"
+                        minOccurs="0" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="DT_CO024_S">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">fa997793c31c1
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="SET_ID" type="xsd:string" />
+                    <xsd:element name="ACCNUT_YEAR" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="MT_CO024_S">
+        <wsdl:documentation />
+        <wsdl:part name="MT_CO024_S" element="p1:MT_CO024_S" />
+    </wsdl:message>
+    <wsdl:message name="MT_CO024_SR">
+        <wsdl:documentation />
+        <wsdl:part name="MT_CO024_SR" element="p1:MT_CO024_SR" />
+    </wsdl:message>
+    <wsdl:portType name="CO024_SO">
+        <wsdl:documentation />
+        <wsdl:operation name="CO024_SO">
+            <wsdl:documentation />
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_CO024_SO" />
+            </wsp:Policy>
+            <wsdl:input message="p1:MT_CO024_S" />
+            <wsdl:output message="p1:MT_CO024_SR" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CO024_SOBinding" type="p1:CO024_SO">
+        <soap:binding style="document"
+            transport="http://schemas.xmlsoap.org/soap/http"
+            xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        <wsdl:operation name="CO024_SO">
+            <soap:operation
+                soapAction="http://sap.com/xi/WebService/soap1.1"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            <wsdl:input>
+                <soap:body use="literal"
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CO024_SOService">
+        <wsdl:port name="HTTP_Port" binding="p1:CO024_SOBinding">
+            <soap:address
+                location="http://gderp-pidap.lk.com:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=GSA13_D&amp;receiverParty=&amp;receiverService=&amp;interface=CO024_SO&amp;interfaceNamespace=http%3A%2F%2Flk.co.kr%2FCO024"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        </wsdl:port>
+        <wsdl:port name="HTTPS_Port" binding="p1:CO024_SOBinding">
+            <soap:address
+                location="https://gderp-pidap.lk.com:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=GSA13_D&amp;receiverParty=&amp;receiverService=&amp;interface=CO024_SO&amp;interfaceNamespace=http%3A%2F%2Flk.co.kr%2FCO024"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

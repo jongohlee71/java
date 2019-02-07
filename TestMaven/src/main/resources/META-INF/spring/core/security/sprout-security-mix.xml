@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <!-- 권한 체크가 필요없는 url 정보 등록 -->    
+    <sec:http pattern="/resources/**" security="none" />
+    <!-- SSO -->
+    <sec:http pattern="/sso*" security="none" />
+    <!-- SSO sample test -->
+    <sec:http pattern="/sso/**" security="none" />
+    <!-- 내부 BO 호출을 위한 통로 -->
+    <sec:http pattern="/forward/**" security="none" />
+    <!-- Web Service -->
+    <sec:http pattern="/services/**" security="none" />
+    <!-- lk Popup -->
+    <sec:http pattern="/lkPop/**" security="none" />
+    <!-- lk Popup File Download : 동적진단 취약사항 조치 
+    <sec:http pattern="/attach/download**" security="none" />
+    -->
+    <!-- 로그인 공지사항 -->
+    <sec:http pattern="/notice/**" security="none" />
+    <!-- E-mail -->
+    <sec:http pattern="/email/**" security="none" />
+    
+    <!-- spring security file cofnig (file 기반일때의 설정)-->
+    <sec:http access-decision-manager-ref="accessDecisionManager"
+              authentication-manager-ref="authenticationManager"
+              entry-point-ref="loginUrlAuthenticationEntryPoint"
+              use-expressions="true">
+              
+        <sec:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />                  
+        <sec:custom-filter position="LOGOUT_FILTER"             ref="logoutFilter"  />                  
+        <sec:custom-filter position="FORM_LOGIN_FILTER"         ref="defaultUsernamePasswordAuthenticationFilter"  />
+    
+        <sec:csrf disabled="true" />
+    <sec:headers>
+      <sec:frame-options policy="SAMEORIGIN"/>
+    </sec:headers>
+    <sec:access-denied-handler ref="accessDeniedHandler"  />
+        <sec:intercept-url pattern="/login*"                 access="permitAll"  />
+        <sec:intercept-url pattern="/ajax-redirect/**"     access="permitAll"  />
+        <sec:intercept-url pattern="/**"                   access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+    </sec:http>    
+        
+    <beans:bean id="defaultUserDetailsService" class="lk.app.common.security.CustomJdbcDaoImpl">
+        <beans:property name="dataSource"        ref="dataSource"/>
+        <beans:property name="enableAuthorities" value="false"/>
+        <beans:property name="enableGroups"      value="true"/>
+        <beans:property name="rolePrefix"        value=""/>
+        <beans:property name="usersByUsernameQuery" value="${${dbms.kind}.security.users-by-username-query}"/>
+    </beans:bean>    
+            
+</beans:beans>
