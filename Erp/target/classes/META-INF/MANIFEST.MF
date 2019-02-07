@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: ERP PROJECT
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: JONGOH
+Implementation-Vendor-Id: com.lk
+Build-Jdk: 1.8.0_202
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/Erp
+Created-By: Maven Integration for Eclipse
+
