@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Wed Feb 06 11:54:37 KST 2019:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-0168-c0ba-8ae6-000006a80c78 
-on database directory memory:C:\Users\HOME\eclipse-workspace\LmsApi\testdb with class loader sun.misc.Launcher$AppClassLoader@4b1210ee 
-Loaded from file:/C:/Users/HOME/.m2/repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
+Thu Feb 14 15:23:09 KST 2019:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-0168-eaac-54a5-00000697e808 
+on database directory memory:C:\Users\JONGOH\git\java\LmsApi\testdb with class loader sun.misc.Launcher$AppClassLoader@764c12b6 
+Loaded from file:/C:/Users/JONGOH/.m2/repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_172-b11
-user.dir=C:\Users\HOME\eclipse-workspace\LmsApi
+java.runtime.version=1.8.0_202-b08
+user.dir=C:\Users\JONGOH\git\java\LmsApi
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0
